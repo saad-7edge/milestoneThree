@@ -18,16 +18,16 @@
 .button{
   cursor: pointer;
   padding: 10px;
-  transition: background-color 0.3s ease, transform 0.2s ease; 
+  transition: background-color 0.3s ease
 }
 
-.button:hover {
-  background-color: black; /* Background color on hover */
+/* .button:hover {
+  background-color: black; 
   color: white;
   transform: scale(1.1);
   border-radius: 2px;
 
-}
+} */
 .slideshow-container{
   justify-content: center;
   display: flex;

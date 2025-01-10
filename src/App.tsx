@@ -9,11 +9,25 @@ import { quoteData } from "./data";
 function App() {
 	const maxLength = quoteData.length;
 	const [quoteNumber, setQuoteNumber] = useState<number>(0);
+	const [disabled, setDisabled] = useState({
+		restart: false,
+		next: false,
+		previous: false,
+	});
 
 	useEffect(() => {
 		const timeoutSlideshow = setTimeout(() => {
-			setQuoteNumber((prev) => (prev < maxLength - 1 ? prev + 1 : 0)); // Restart at 0 after the last quote
-		}, 5000);
+			setQuoteNumber((prev) => {
+				const nextQuote = prev < maxLength - 1 ? prev + 1 : maxLength - 1; // Restart at 0 after last quote
+				setDisabled({
+					restart: nextQuote === 0,
+					next: nextQuote === maxLength - 1,
+					previous: nextQuote < 0,
+				});
+				console.log(nextQuote, "is next quote");
+				return nextQuote;
+			});
+		}, 3000);
 
 		return () => clearTimeout(timeoutSlideshow);
 	}, [quoteNumber, maxLength]);
@@ -21,26 +35,47 @@ function App() {
 	const handleRestart = () => {
 		setQuoteNumber(0);
 		console.log(`Restarted: ${quoteNumber}`);
+		setDisabled({ restart: true, next: false, previous: true });
 	};
 
 	const handlePrevious = () => {
-		if (quoteNumber > 0) {
-			setQuoteNumber((prev) => prev - 1);
-		}
+		setQuoteNumber((prev) => {
+			const newQuoteNumber = prev > 0 ? prev - 1 : 0;
+			setDisabled({
+				restart: false,
+				next: false,
+				previous: newQuoteNumber === 0,
+			});
+			return newQuoteNumber;
+		});
 	};
 
 	const handleNext = () => {
-		if (quoteNumber < maxLength - 1) {
-			setQuoteNumber((prev) => prev + 1);
-		}
+		setQuoteNumber((prev) => {
+			const newQuoteNumber = prev < maxLength - 1 ? prev + 1 : prev;
+			setDisabled({
+				restart: false,
+				next: newQuoteNumber === maxLength - 1,
+				previous: false,
+			});
+			return newQuoteNumber;
+		});
 	};
 
 	return (
 		<div className="container">
 			<div className="buttons">
-				<Button title="Restart" onClick={handleRestart} />
-				<Button title="Previous" onClick={handlePrevious} />
-				<Button title="Next" onClick={handleNext} />
+				<Button
+					title="Restart"
+					onClick={handleRestart}
+					disabled={disabled.restart}
+				/>
+				<Button
+					title="Previous"
+					onClick={handlePrevious}
+					disabled={disabled.previous}
+				/>
+				<Button title="Next" onClick={handleNext} disabled={disabled.next} />
 			</div>
 			<div className="slideshow-container">
 				<h3>{quoteData[quoteNumber].quote}</h3>

@@ -4,11 +4,12 @@ import "./../App.css";
 interface Props {
 	title: string;
 	onClick?: () => void;
+	disabled?: boolean;
 }
 
-const Button = ({ title, onClick }: Props) => {
+const Button = ({ title, onClick, disabled }: Props) => {
 	return (
-		<button className="button" onClick={onClick}>
+		<button className="button" disabled={disabled} onClick={onClick}>
 			{title}
 		</button>
 	);
