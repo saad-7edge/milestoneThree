@@ -18,11 +18,11 @@ function App() {
 	useEffect(() => {
 		const timeoutSlideshow = setTimeout(() => {
 			setQuoteNumber((prev) => {
-				const nextQuote = prev < maxLength - 1 ? prev + 1 : maxLength - 1; // Restart at 0 after last quote
+				const nextQuote = prev < maxLength - 1 ? prev + 1 : maxLength - 1;
 				setDisabled({
 					restart: nextQuote === 0,
 					next: nextQuote === maxLength - 1,
-					previous: nextQuote < 0,
+					previous: nextQuote === 0,
 				});
 				console.log(nextQuote, "is next quote");
 				return nextQuote;
@@ -42,7 +42,7 @@ function App() {
 		setQuoteNumber((prev) => {
 			const newQuoteNumber = prev > 0 ? prev - 1 : 0;
 			setDisabled({
-				restart: false,
+				restart: newQuoteNumber === 0,
 				next: false,
 				previous: newQuoteNumber === 0,
 			});
